@@ -9,27 +9,35 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class FirebaseConfig {
 
     @PostConstruct
-    public void initFirebase() throws IOException {
-        InputStream serviceAccount =
-                getClass().getClassLoader().getResourceAsStream("firebase/serviceAccountKey.json");
+    public void initFirebase() {
+        try {
+            if (FirebaseApp.getApps().isEmpty()) {
+                String serviceAccountJson = System.getenv("FIREBASE_SERVICE_ACCOUNT_JSON");
 
-        if (serviceAccount == null) {
-            throw new IllegalStateException("Firebase service account file not found.");
-        }
+                if (serviceAccountJson == null || serviceAccountJson.isBlank()) {
+                    throw new IllegalStateException("Environment variable 'FIREBASE_SERVICE_ACCOUNT_JSON' is not set or empty.");
+                }
 
-        FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .build();
+                InputStream serviceAccountStream = new ByteArrayInputStream(
+                        serviceAccountJson.getBytes(StandardCharsets.UTF_8)
+                );
 
-        if (FirebaseApp.getApps().isEmpty()) {
-            FirebaseApp.initializeApp(options);
+                FirebaseOptions options = FirebaseOptions.builder()
+                        .setCredentials(GoogleCredentials.fromStream(serviceAccountStream))
+                        .build();
+
+                FirebaseApp.initializeApp(options);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize Firebase", e);
         }
     }
 
