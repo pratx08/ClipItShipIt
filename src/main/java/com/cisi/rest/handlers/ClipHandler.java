@@ -1,7 +1,8 @@
 package com.cisi.rest.handlers;
 
 import com.cisi.rest.model.ClipRequest;
+import com.cisi.rest.model.entity.ClipEntity;
 
 public interface ClipHandler {
-    String createClip(ClipRequest request);
+    ClipEntity createClip(ClipRequest request);
 }

@@ -18,13 +18,13 @@ public class ClipHandlerImpl implements ClipHandler {
     private Firestore firestore;
 
     @Override
-    public String createClip(ClipRequest request) {
+    public ClipEntity  createClip(ClipRequest request) {
         String clipId = UUID.randomUUID().toString();
         ClipEntity entity = ClipTransformer.toEntity(request, clipId);
 
         DocumentReference ref = firestore.collection("clips").document(clipId);
-        ref.set(entity);  // Asynchronous Firestore write
+        ref.set(entity);  // Fire and forget, non-blocking
 
-        return clipId;
+        return entity;
     }
 }

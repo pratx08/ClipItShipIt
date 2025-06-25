@@ -18,11 +18,11 @@
 	<description>Spring Boot backend for ClipItShipIt</description>
 
 	<properties>
-		<java.version>24</java.version>
+		<java.version>17</java.version>
 	</properties>
 
 	<dependencies>
-		<!-- Core Spring Boot Web -->
+		<!-- Spring Boot Web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -35,7 +35,7 @@
 			<version>9.5.0</version>
 		</dependency>
 
-		<!-- DevTools for Hot Reload -->
+		<!-- Spring Boot DevTools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -51,13 +51,14 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Test Support -->
+		<!-- Spring Boot Starter Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
+		<!-- JPA + H2 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -69,6 +70,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- org.json -->
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
@@ -78,6 +80,7 @@
 
 	<build>
 		<plugins>
+			<!-- Compiler Plugin with Annotation Processor -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -88,10 +91,13 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<version>1.18.30</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+
+			<!-- Spring Boot Plugin -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

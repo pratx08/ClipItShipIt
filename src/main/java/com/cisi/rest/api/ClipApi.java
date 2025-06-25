@@ -2,6 +2,7 @@ package com.cisi.rest.api;
 
 import com.cisi.rest.handlers.ClipHandler;
 import com.cisi.rest.model.ClipRequest;
+import com.cisi.rest.model.entity.ClipEntity;
 import com.cisi.rest.utilities.YoutubeService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,13 @@ public class ClipApi {
     private YoutubeService youTubeService;
 
     @PostMapping
-    public ResponseEntity<String> createClip(@RequestBody ClipRequest request) {
-        String clipId = clipHandler.createClip(request);
-        return ResponseEntity.ok(clipId);
+    public ResponseEntity<ClipEntity> createClip(@RequestBody ClipRequest request) {
+        ClipEntity savedClip = clipHandler.createClip(request);
+        return ResponseEntity.ok(savedClip);
     }
 
     @GetMapping("/nightbot")
-    public ResponseEntity<String> createClipFromNightbot(
+    public ResponseEntity<?> createClipFromNightbot(
             @RequestParam String channel,
             @RequestParam String user) {
 
@@ -51,7 +52,7 @@ public class ClipApi {
         request.setModeratorName(user);
         request.setClippedAt(clippedAt);
 
-        String clipId = clipHandler.createClip(request);
-        return ResponseEntity.ok("Clip saved with ID: " + clipId);
+        ClipEntity savedClip = clipHandler.createClip(request);
+        return ResponseEntity.ok(savedClip);
     }
 }

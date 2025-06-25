@@ -1,14 +1,12 @@
-# Use official OpenJDK image
-FROM eclipse-temurin:17-jdk
-
-# Set working directory
+# Stage 1: Build the Spring Boot app
+FROM maven:3.9.4-eclipse-temurin-17 AS builder
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy built jar
-COPY target/cisi-0.0.1-SNAPSHOT.jar app.jar
-
-# Expose port (Spring Boot default)
+# Stage 2: Run the compiled app
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Run the app
 ENTRYPOINT ["java", "-jar", "app.jar"]
