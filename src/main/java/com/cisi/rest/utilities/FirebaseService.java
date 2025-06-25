@@ -15,6 +15,7 @@ public class FirebaseService {
 
     public Long getStreamStartTime(String channel) {
         try {
+            channel = channel.trim().toLowerCase();
             DocumentSnapshot snapshot = firestore.collection("stream_metadata").document(channel).get().get();
             if (snapshot.exists()) {
                 return snapshot.getLong("start_time");
