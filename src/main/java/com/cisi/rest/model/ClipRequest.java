@@ -11,4 +11,6 @@ public class ClipRequest {
     private String duration;
     private String moderatorName;
     private String clippedAt;
+    private Long clipTimestamp;
+    private String clipLink;
 }

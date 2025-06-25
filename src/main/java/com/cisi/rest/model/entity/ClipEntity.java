@@ -22,4 +22,7 @@ public class ClipEntity {
 
     private int viewCount;
     private int likeCount;
+
+    private Long clipTimestamp;
+    private String clipLink;
 }
