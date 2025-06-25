@@ -13,23 +13,24 @@ public class YoutubeService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public JSONObject getLiveVideoInfo(String channelName) {
-        // 1. Get channel ID from username
-        String channelUrl = "https://www.googleapis.com/youtube/v3/channels?part=id&forUsername="
-                + channelName + "&key=" + apiKey;
-        String channelResponse = restTemplate.getForObject(channelUrl, String.class);
-        JSONArray items = new JSONObject(channelResponse).getJSONArray("items");
+    public JSONObject getLiveVideoInfo(String channelHandle) {
+        // 1. Resolve channel handle to channel ID
+        String cleanHandle = channelHandle.startsWith("@") ? channelHandle.substring(1) : channelHandle;
+        String searchUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q="
+                + cleanHandle + "&key=" + apiKey;
 
-        if (items.isEmpty()) return null;
+        String searchResponse = restTemplate.getForObject(searchUrl, String.class);
+        JSONArray searchItems = new JSONObject(searchResponse).getJSONArray("items");
+        if (searchItems.isEmpty()) return null;
 
-        String channelId = items.getJSONObject(0).getString("id");
+        String channelId = searchItems.getJSONObject(0).getJSONObject("snippet").getString("channelId");
 
-        // 2. Get live video from that channel
+        // 2. Get live video from resolved channel ID
         String liveVideoUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId="
                 + channelId + "&eventType=live&type=video&key=" + apiKey;
+
         String liveResponse = restTemplate.getForObject(liveVideoUrl, String.class);
         JSONArray liveItems = new JSONObject(liveResponse).getJSONArray("items");
-
         if (liveItems.isEmpty()) return null;
 
         JSONObject liveItem = liveItems.getJSONObject(0);
